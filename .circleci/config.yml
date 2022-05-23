@@ -1,0 +1,25 @@
+version: 2
+general:
+  branches:
+    only:
+      - main
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout
+      - run:
+          name: Deploy
+          command: |
+            ssh -o StrictHostKeyChecking=no ubuntu@15.188.232.234 \
+            "echo Start deploy && \
+            cd ~/docker-demo && \
+            git pull origin main && \
+            sudo docker compose up --build -d && \
+            echo Deploy end"
+workflows:
+  version: 2
+  deploy_ec2:
+    jobs:
+      - build
